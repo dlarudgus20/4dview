@@ -59,7 +59,7 @@ bool MainWnd::create()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-	m_wnd = glfwCreateWindow(MAINWND_WIDTH, MAINWND_HEIGHT, u8"pfps (press F1 to print help on console)", nullptr, nullptr);
+	m_wnd = glfwCreateWindow(MAINWND_WIDTH, MAINWND_HEIGHT, "pfps (press F1 to print help on console)", nullptr, nullptr);
 	if (m_wnd != nullptr)
 	{
 		glfwMakeContextCurrent(m_wnd);
