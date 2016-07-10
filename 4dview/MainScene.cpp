@@ -43,6 +43,16 @@ MainScene::~MainScene()
 
 }
 
+bool MainScene::getIsWireframe() const
+{
+	return m_bWireframe;
+}
+
+void MainScene::setIsWireframe(bool wire)
+{
+	m_bWireframe = wire;
+}
+
 void MainScene::render(const glm::mat4 &viewMatrix3, const math4d::mat5 &viewMatrix4) const
 {
 	Shader *pShader = Shader::getCurrentShader();
@@ -50,35 +60,21 @@ void MainScene::render(const glm::mat4 &viewMatrix3, const math4d::mat5 &viewMat
 	glm::mat4 vmMatrix3 = viewMatrix3;
 	math4d::mat5 vmMatrix4 = viewMatrix4;
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	if (m_bWireframe)
+	{
+		glDisable(GL_BLEND);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 
 	{
 		pShader->setUniformMatrix4f("vmMatrix3d", vmMatrix3);
 		pShader->setUniform1fv("vmMatrix4d.m", 25, vmMatrix4.m);
 		m_container.draw();
 	}
-
-	/*{
-		glm::mat4 prevMat3 = vmMatrix3;
-		vmMatrix3 = glm::translate(vmMatrix3, { 0.0f, 1.5f, 0.0f });
-		pShader->setUniformMatrix4f("vmMatrix3", vmMatrix3);
-		m_container.draw();
-		vmMatrix3 = prevMat3;
-	}
-	{
-		glm::mat4 prevMat3 = vmMatrix3;
-		vmMatrix3 = glm::translate(vmMatrix3, { 2.0f, 0.0f, 1.0f });
-		pShader->setUniformMatrix4f("vmMatrix3", vmMatrix3);
-		m_container.draw();
-		vmMatrix3 = prevMat3;
-	}
-	{
-		glm::mat4 prevMat3 = vmMatrix3;
-		vmMatrix3 = glm::translate(vmMatrix3, { -1.0f, 0.0f, 2.0f });
-		vmMatrix3 = glm::rotate(vmMatrix3, glm::radians(60.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f)));
-		vmMatrix3 = glm::scale(vmMatrix3, glm::vec3(0.5f));
-		pShader->setUniformMatrix4f("vmMatrix3", vmMatrix3);
-		m_container.draw();
-		vmMatrix3 = prevMat3;
-	}*/
 }

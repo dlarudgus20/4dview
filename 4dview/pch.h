@@ -43,6 +43,7 @@
 #include <algorithm>
 #include <iterator>
 #include <string>
+#include <array>
 #include <map>
 #include <memory>
 #include <exception>

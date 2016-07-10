@@ -135,11 +135,13 @@ void Camera4d::calculate()
 	m_over = math4d::cross4(
 		m_right, m_front, m_up);
 
+	glm::vec4 pos = -m_distance * m_front;
+
 	m_matrix = math4d::mat5 {
-		-m_right.x, m_up.x, m_over.x, m_front.x, 0,
-		-m_right.y, m_up.y, m_over.y, m_front.y, 0,
-		-m_right.z, m_up.z, m_over.z, m_front.z, 0,
-		-m_right.w, m_up.w, m_over.w, m_front.w, m_distance,
+		-m_right.x, m_up.x, m_over.x, m_front.x, pos.x,
+		-m_right.y, m_up.y, m_over.y, m_front.y, pos.y,
+		-m_right.z, m_up.z, m_over.z, m_front.z, pos.z,
+		-m_right.w, m_up.w, m_over.w, m_front.w, pos.w,
 		0, 0, 0, 0, 1,
 	};
 }

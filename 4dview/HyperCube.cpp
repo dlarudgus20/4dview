@@ -35,171 +35,112 @@
 
 namespace
 {
-	const GLsizei strides = 4 * sizeof(GLfloat);
-/*
-	static GLfloat vertices[] = {
-		-0.5f, -0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, -0.5f, 0.0f,
-		0.5f, 0.5f, -0.5f, 0.0f,
-		0.5f, 0.5f, -0.5f, 0.0f,
-		-0.5f, 0.5f, -0.5f, 0.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f,
+	const GLsizei strides = 8 * sizeof(GLfloat);
 
-		-0.5f, -0.5f, 0.5f, 0.0f,
-		0.5f, -0.5f, 0.5f, 0.0f,
-		0.5f, 0.5f, 0.5f, 0.0f,
-		0.5f, 0.5f, 0.5f, 0.0f,
-		-0.5f, 0.5f, 0.5f, 0.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f,
-
-		-0.5f, 0.5f, 0.5f, 0.0f,
-		-0.5f, 0.5f, -0.5f, 0.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f,
-		-0.5f, 0.5f, 0.5f, 0.0f,
-
-		0.5f, 0.5f, 0.5f, 0.0f,
-		0.5f, 0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.5f, 0.0f,
-		0.5f, 0.5f, 0.5f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.5f, 0.0f,
-		0.5f, -0.5f, 0.5f, 0.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f,
-
-		-0.5f, 0.5f, -0.5f, 0.0f,
-		0.5f, 0.5f, -0.5f, 0.0f,
-		0.5f, 0.5f, 0.5f, 0.0f,
-		0.5f, 0.5f, 0.5f, 0.0f,
-		-0.5f, 0.5f, 0.5f, 0.0f,
-		-0.5f, 0.5f, -0.5f, 0.0f,
+	GLfloat vertices[] = {
+		// position, color
+		-0.5f, -0.5f, -0.5f, -0.5f,    0.0f, 1.0f, 0.0f, 0.5f,
+		-0.5f, -0.5f, -0.5f, +0.5f,    0.4f, 1.0f, 0.0f, 0.5f,
+		-0.5f, -0.5f, +0.5f, -0.5f,    0.0f, 1.0f, 0.4f, 0.5f,
+		-0.5f, -0.5f, +0.5f, +0.5f,    0.8f, 1.0f, 0.0f, 0.5f,
+		-0.5f, +0.5f, -0.5f, -0.5f,    0.0f, 1.0f, 0.8f, 0.5f,
+		-0.5f, +0.5f, -0.5f, +0.5f,    0.4f, 1.0f, 0.7f, 0.5f,
+		-0.5f, +0.5f, +0.5f, -0.5f,    0.7f, 1.0f, 0.4f, 0.5f,
+		-0.5f, +0.5f, +0.5f, +0.5f,    0.8f, 1.0f, 0.8f, 0.5f,
+		+0.5f, -0.5f, -0.5f, -0.5f,    0.0f, 0.0f, 1.0f, 0.5f,
+		+0.5f, -0.5f, -0.5f, +0.5f,    0.4f, 0.0f, 1.0f, 0.5f,
+		+0.5f, -0.5f, +0.5f, -0.5f,    0.0f, 0.4f, 1.0f, 0.5f,
+		+0.5f, -0.5f, +0.5f, +0.5f,    0.8f, 0.0f, 1.0f, 0.5f,
+		+0.5f, +0.5f, -0.5f, -0.5f,    0.0f, 0.8f, 1.0f, 0.5f,
+		+0.5f, +0.5f, -0.5f, +0.5f,    0.4f, 0.7f, 1.0f, 0.5f,
+		+0.5f, +0.5f, +0.5f, -0.5f,    0.7f, 0.4f, 1.0f, 0.5f,
+		+0.5f, +0.5f, +0.5f, +0.5f,    0.8f, 0.8f, 1.0f, 0.5f,
 	};
-	void InitalizeVertices() { }
-//*/
-///*
-	GLfloat vertices[8 * 6 * 2 * 3 * 4];
-	void InitalizeVertices()
+	std::array<GLint, 8 * 6 * 6> indices;
+
+	void InitializeVertices()
 	{
 		static bool inited = false;
 		if (inited)
 			return;
 		inited = true;
 
-		static GLfloat cube3_vertices[][3] = {
-			-0.5f, -0.5f, -0.5f,
-			0.5f, -0.5f, -0.5f,
-			0.5f, 0.5f, -0.5f,
-			0.5f, 0.5f, -0.5f,
-			-0.5f, 0.5f, -0.5f,
-			-0.5f, -0.5f, -0.5f,
-
-			-0.5f, -0.5f, 0.5f,
-			0.5f, -0.5f, 0.5f,
-			0.5f, 0.5f, 0.5f,
-			0.5f, 0.5f, 0.5f,
-			-0.5f, 0.5f, 0.5f,
-			-0.5f, -0.5f, 0.5f,
-
-			-0.5f, 0.5f, 0.5f,
-			-0.5f, 0.5f, -0.5f,
-			-0.5f, -0.5f, -0.5f,
-			-0.5f, -0.5f, -0.5f,
-			-0.5f, -0.5f, 0.5f,
-			-0.5f, 0.5f, 0.5f,
-
-			0.5f, 0.5f, 0.5f,
-			0.5f, 0.5f, -0.5f,
-			0.5f, -0.5f, -0.5f,
-			0.5f, -0.5f, -0.5f,
-			0.5f, -0.5f, 0.5f,
-			0.5f, 0.5f, 0.5f,
-
-			-0.5f, -0.5f, -0.5f,
-			0.5f, -0.5f, -0.5f,
-			0.5f, -0.5f, 0.5f,
-			0.5f, -0.5f, 0.5f,
-			-0.5f, -0.5f, 0.5f,
-			-0.5f, -0.5f, -0.5f,
-
-			-0.5f, 0.5f, -0.5f,
-			0.5f, 0.5f, -0.5f,
-			0.5f, 0.5f, 0.5f,
-			0.5f, 0.5f, 0.5f,
-			-0.5f, 0.5f, 0.5f,
-			-0.5f, 0.5f, -0.5f,
-		};
-
 		int idx = 0;
 
-		for (float x = -0.5f; x != 0.5f; x = 0.5f)
-		{
-			for (const auto &vt : cube3_vertices)
-			{
-				vertices[idx++] = x;
-				vertices[idx++] = vt[0];
-				vertices[idx++] = vt[1];
-				vertices[idx++] = vt[2];
-			}
-		}
-		for (float y = -0.5f; y != 0.5f; y = 0.5f)
-		{
-			for (const auto &vt : cube3_vertices)
-			{
-				vertices[idx++] = vt[0];
-				vertices[idx++] = y;
-				vertices[idx++] = vt[1];
-				vertices[idx++] = vt[2];
-			}
-		}
-		for (float z = -0.5f; z != 0.5f; z = 0.5f)
-		{
-			for (const auto &vt : cube3_vertices)
-			{
-				vertices[idx++] = vt[0];
-				vertices[idx++] = vt[1];
-				vertices[idx++] = z;
-				vertices[idx++] = vt[2];
-			}
-		}
-		for (float w = -0.5f; w != 0.5f; w = 0.5f)
-		{
-			for (const auto &vt : cube3_vertices)
-			{
-				vertices[idx++] = vt[0];
-				vertices[idx++] = vt[1];
-				vertices[idx++] = vt[2];
-				vertices[idx++] = w;
-			}
-		}
+		const int X = 1;
+		const int Y = 2;
+		const int Z = 4;
+		const int W = 8;
+
+		auto getidx = [](int xyzw) {
+			return (xyzw & 1) * 8
+				+ ((xyzw & 2) >> 1) * 4
+				+ ((xyzw & 4) >> 2) * 2
+				+ ((xyzw & 8) >> 3);
+		};
+
+		// (+): 013 320
+		// (-): 023 310
+		// 023 310
+		// 457 764
+		// 046 620
+		// 137 751
+		// 015 540
+		// 267 732
+
+		auto put_cube3_indices = [&idx, getidx](int o, int i, int j, int k) {
+			std::array<GLint, 8> v = {
+				o, o | i, o | j, o | i | j,
+				o | k, o | k | i, o | k | j, o | k | i | j
+			};
+			std::array<GLint, 36> a = {
+				v[0], v[2], v[3], v[3], v[1], v[0],
+				v[4], v[5], v[7], v[7], v[6], v[4],
+				v[0], v[4], v[6], v[6], v[2], v[0],
+				v[1], v[3], v[7], v[7], v[5], v[1],
+				v[0], v[1], v[5], v[5], v[4], v[0],
+				v[2], v[6], v[7], v[7], v[3], v[2]
+			};
+			std::transform(a.cbegin(), a.cend(), indices.begin() + idx, getidx);
+			idx += a.size();
+		};
+
+		put_cube3_indices(0, Z, Y, W); // x = 0, i j k = z y w
+		put_cube3_indices(X, Y, Z, W); // x = 1, i j k = y z w
+		put_cube3_indices(0, W, Z, X); // y = 0, i j k = w z x
+		put_cube3_indices(Y, Z, W, X); // y = 1, i j k = z w x
+		put_cube3_indices(0, X, W, Y); // z = 0, i j k = x w y
+		put_cube3_indices(Z, W, X, Y); // z = 1, i j k = w x y
+		put_cube3_indices(0, Y, X, Z); // w = 0, i j k = y x z
+		put_cube3_indices(W, X, Y, Z); // w = 1, i j k = x y z
 	}
-//*/
 }
 
 HyperCube::HyperCube()
 	: m_color(1.0f, 1.0f, 1.0f, 1.0f)
 {
-	InitalizeVertices();
+	InitializeVertices();
 
 	glGenVertexArrays(1, &m_vao);
 	glGenBuffers(1, &m_vbo);
+	glGenBuffers(1, &m_ebo);
 
 	glBindVertexArray(m_vao);
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, strides, (GLvoid *)0);
-		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices.data(), GL_STATIC_DRAW);
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, strides, (const GLvoid *)0);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, strides, (const GLvoid *)(4 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(1);
 	}
 	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 HyperCube::~HyperCube()
@@ -217,6 +158,7 @@ void HyperCube::draw(bool bUseMaterial /* = true */) const
 	}
 
 	glBindVertexArray(m_vao);
-	glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / strides);
+	//glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / strides);
+	glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_INT, (const GLvoid *)0);
 	glBindVertexArray(0);
 }

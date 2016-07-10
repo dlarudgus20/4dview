@@ -36,11 +36,16 @@ struct Material
 	vec4 color;
 };
 
+in VS_OUT
+{
+	vec4 fragColor;
+} vs_out;
+
 out vec4 color;
 
 uniform Material material;
 
 void main()
 {
-	color = material.color;
+	color = material.color * vs_out.fragColor;
 }

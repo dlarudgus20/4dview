@@ -59,7 +59,7 @@ bool MainWnd::create()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-	m_wnd = glfwCreateWindow(MAINWND_WIDTH, MAINWND_HEIGHT, "pfps", nullptr, nullptr);
+	m_wnd = glfwCreateWindow(MAINWND_WIDTH, MAINWND_HEIGHT, u8"pfps (press F1 to print help on console)", nullptr, nullptr);
 	if (m_wnd != nullptr)
 	{
 		glfwMakeContextCurrent(m_wnd);
@@ -162,14 +162,17 @@ void MainWnd::loopManualFPS()
 void MainWnd::initCallback()
 {
 #define THIZ static_cast<MainWnd *>(glfwGetWindowUserPointer(wnd))
+	glfwSetKeyCallback(m_wnd, [](GLFWwindow *wnd, int key, int scancode, int action, int mods) {
+		THIZ->onKeyInput(key, scancode, action, mods);
+	});
+	glfwSetCursorPosCallback(m_wnd, [](GLFWwindow *wnd, double xpos, double ypos) {
+		THIZ->onMouseCursorPos(xpos, ypos);
+	});
 	glfwSetFramebufferSizeCallback(m_wnd, [] (GLFWwindow *wnd, int width, int height) {
 		THIZ->onFrameBufferSize(width, height);
 	});
 	glfwSetWindowCloseCallback(m_wnd, [](GLFWwindow *wnd) {
 		THIZ->onWindowClose();
-	});
-	glfwSetCursorPosCallback(m_wnd, [](GLFWwindow *wnd, double xpos, double ypos) {
-		THIZ->onMouseCursorPos(xpos, ypos);
 	});
 #undef THIZ
 }
@@ -222,28 +225,50 @@ void MainWnd::render()
 
 void MainWnd::idle()
 {
-	const float unit = 2.5f;
-
+	const float unit3d = 2.5f;
 	int front = 0, right = 0;
 	front += glfwGetKey(m_wnd, GLFW_KEY_W) == GLFW_PRESS ? 1 : 0;
 	front += glfwGetKey(m_wnd, GLFW_KEY_S) == GLFW_PRESS ? -1 : 0;
 	right += glfwGetKey(m_wnd, GLFW_KEY_D) == GLFW_PRESS ? 1 : 0;
 	right += glfwGetKey(m_wnd, GLFW_KEY_A) == GLFW_PRESS ? -1 : 0;
+	m_camera3d.move(front, right, unit3d * (float)m_deltaTime);
 
-	m_camera3d.move(front, right, unit * m_deltaTime);
+	const float unit4d = glm::radians(3.0f);
+	int pitch = 0, roll = 0, yaw = 0;
+	pitch += glfwGetKey(m_wnd, GLFW_KEY_Y) == GLFW_PRESS ? 1 : 0;
+	pitch += glfwGetKey(m_wnd, GLFW_KEY_U) == GLFW_PRESS ? -1 : 0;
+	roll += glfwGetKey(m_wnd, GLFW_KEY_H) == GLFW_PRESS ? 1 : 0;
+	roll += glfwGetKey(m_wnd, GLFW_KEY_J) == GLFW_PRESS ? -1 : 0;
+	yaw += glfwGetKey(m_wnd, GLFW_KEY_N) == GLFW_PRESS ? 1 : 0;
+	yaw += glfwGetKey(m_wnd, GLFW_KEY_M) == GLFW_PRESS ? -1 : 0;
+	m_camera4d.setPitchRollYaw(
+		m_camera4d.getPitch() + unit4d * pitch,
+		m_camera4d.getRoll() + unit4d * roll,
+		m_camera4d.getYaw() + unit4d * yaw);
 }
 
-void MainWnd::calcProjection(int width, int height)
+void MainWnd::onKeyInput(int key, int scancode, int action, int mods)
 {
-	float aspect;
-
-	// 최소화 상태일땐 width == height == 0임.
-	if (width == 0 || height == 0)
-		aspect = 1.0f;
-	else
-		aspect = (float)width / height;
-
-	m_camera3d.calcProjection(aspect);
+	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
+	{
+		m_pScene->setIsWireframe(!m_pScene->getIsWireframe());
+	}
+	else if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+	{
+		glfwDestroyWindow(m_wnd);
+	}
+	else if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
+	{
+		std::cout <<
+			"W/A/S/D : move 3d-space camera\n"
+			"Y/U : rotate 4d-space camera (axis 1)\n"
+			"H/J : rotate 4d-space camera (axis 2)\n"
+			"N/M : rotate 4d-space camera (axis 3)\n"
+			"1 : turn on/off wireframe\n"
+			"Q: quit\n"
+			"F1 : show this message"
+			<< std::endl;
+	}
 }
 
 void MainWnd::onMouseCursorPos(double xpos, double ypos)
@@ -296,4 +321,17 @@ void MainWnd::onFrameBufferSize(int width, int height)
 void MainWnd::onWindowClose()
 {
 	// TODO: onWindowClose
+}
+
+void MainWnd::calcProjection(int width, int height)
+{
+	float aspect;
+
+	// 최소화 상태일땐 width == height == 0임.
+	if (width == 0 || height == 0)
+		aspect = 1.0f;
+	else
+		aspect = (float)width / height;
+
+	m_camera3d.calcProjection(aspect);
 }

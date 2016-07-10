@@ -39,6 +39,9 @@ class Scene
 public:
 	virtual ~Scene() = 0;
 
+	virtual bool getIsWireframe() const = 0;
+	virtual void setIsWireframe(bool wire) = 0;
+
 	virtual void render(const glm::mat4 &viewMatrix3, const math4d::mat5 &viewMatrix4) const = 0;
 };
 

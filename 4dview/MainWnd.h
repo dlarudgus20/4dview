@@ -74,11 +74,12 @@ private:
 	void render();
 	void idle();
 
-	void calcProjection(int width, int height);
-
+	void onKeyInput(int key, int scancode, int action, int mods);
 	void onMouseCursorPos(double xpos, double ypos);
 	void onFrameBufferSize(int width, int height);
 	void onWindowClose();
+
+	void calcProjection(int width, int height);
 };
 
 #endif /* MAINWND_H_ */

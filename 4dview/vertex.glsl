@@ -31,8 +31,6 @@
 
 #version 330 core
 
-layout(location = 0) in vec4 position;
-
 struct vec5
 {
 	float v[5];
@@ -41,6 +39,14 @@ struct mat5
 {
 	float m[25];
 };
+
+layout(location = 0) in vec4 position;
+layout(location = 1) in vec4 color;
+
+out VS_OUT
+{
+	vec4 fragColor;
+} vs_out;
 
 uniform mat5 projMatrix4d;
 uniform mat5 vmMatrix4d;
@@ -60,6 +66,8 @@ void main()
 
 	vec4 pos4 = from_vec5(pos5);
 	gl_Position = projMatrix3d * vmMatrix3d * pos4;
+
+	vs_out.fragColor = color;
 }
 
 vec5 to_vec5(vec4 v, float u)

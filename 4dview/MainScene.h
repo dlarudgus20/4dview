@@ -41,9 +41,14 @@ class MainScene : public Scene
 private:
 	HyperCube m_container;
 
+	bool m_bWireframe = false;
+
 public:
 	MainScene();
 	virtual ~MainScene();
+
+	virtual bool getIsWireframe() const override;
+	virtual void setIsWireframe(bool wire) override;
 
 	virtual void render(const glm::mat4 &viewMatrix3, const math4d::mat5 &viewMatrix4) const override;
 };

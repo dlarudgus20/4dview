@@ -35,7 +35,7 @@
 class HyperCube
 {
 private:
-	GLuint m_vbo = 0, m_vao = 0;
+	GLuint m_vbo = 0, m_vao = 0, m_ebo = 0;
 	glm::vec4 m_color;
 
 public:
