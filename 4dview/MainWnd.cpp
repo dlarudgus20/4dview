@@ -192,7 +192,7 @@ bool MainWnd::initialize()
 	try
 	{
 		std::cout << "->compile shader" << std::endl;
-		m_shader.compile("vertex.glsl", "fragment.glsl");
+		m_shader.compile("shader/vertex.glsl", "shader/fragment.glsl");
 		std::cout << ">vertex shader info:\n" << m_shader.getVSInfoString() << std::endl;
 		std::cout << ">fragment shader info:\n" << m_shader.getFSInfoString() << std::endl;
 	}
