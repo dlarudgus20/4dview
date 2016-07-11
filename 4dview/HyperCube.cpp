@@ -102,7 +102,7 @@ namespace
 				v[2], v[6], v[7], v[7], v[3], v[2]
 			};
 			std::transform(a.cbegin(), a.cend(), indices.begin() + idx, getidx);
-			idx += a.size();
+			idx += (int)a.size();
 		};
 
 		put_cube3_indices(0, Z, Y, W); // x = 0, i j k = z y w

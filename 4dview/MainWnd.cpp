@@ -260,7 +260,7 @@ void MainWnd::onKeyInput(int key, int scancode, int action, int mods)
 	else if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
 	{
 		std::cout <<
-			"W/A/S/D : move 3d-space camera\n"
+			"W/A/S/D/mouse : move 3d-space camera\n"
 			"Y/U : rotate 4d-space camera (axis 1)\n"
 			"H/J : rotate 4d-space camera (axis 2)\n"
 			"N/M : rotate 4d-space camera (axis 3)\n"
