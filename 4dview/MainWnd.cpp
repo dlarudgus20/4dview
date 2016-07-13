@@ -233,18 +233,39 @@ void MainWnd::idle()
 	right += glfwGetKey(m_wnd, GLFW_KEY_A) == GLFW_PRESS ? -1 : 0;
 	m_camera3d.move(front, right, unit3d * (float)m_deltaTime);
 
-	const float unit4d = glm::radians(3.0f);
-	int pitch = 0, roll = 0, yaw = 0;
-	pitch += glfwGetKey(m_wnd, GLFW_KEY_Y) == GLFW_PRESS ? 1 : 0;
-	pitch += glfwGetKey(m_wnd, GLFW_KEY_U) == GLFW_PRESS ? -1 : 0;
-	roll += glfwGetKey(m_wnd, GLFW_KEY_H) == GLFW_PRESS ? 1 : 0;
-	roll += glfwGetKey(m_wnd, GLFW_KEY_J) == GLFW_PRESS ? -1 : 0;
-	yaw += glfwGetKey(m_wnd, GLFW_KEY_N) == GLFW_PRESS ? 1 : 0;
-	yaw += glfwGetKey(m_wnd, GLFW_KEY_M) == GLFW_PRESS ? -1 : 0;
-	m_camera4d.setPitchRollYaw(
-		m_camera4d.getPitch() + unit4d * pitch,
-		m_camera4d.getRoll() + unit4d * roll,
-		m_camera4d.getYaw() + unit4d * yaw);
+	const float unit4d = glm::radians(90.0f);
+	int theta1 = 0, theta2 = 0, theta3 = 0;
+	theta1 += glfwGetKey(m_wnd, GLFW_KEY_R) == GLFW_PRESS ? 1 : 0;
+	theta1 += glfwGetKey(m_wnd, GLFW_KEY_T) == GLFW_PRESS ? -1 : 0;
+	theta2 += glfwGetKey(m_wnd, GLFW_KEY_F) == GLFW_PRESS ? 1 : 0;
+	theta2 += glfwGetKey(m_wnd, GLFW_KEY_G) == GLFW_PRESS ? -1 : 0;
+	theta3 += glfwGetKey(m_wnd, GLFW_KEY_V) == GLFW_PRESS ? 1 : 0;
+	theta3 += glfwGetKey(m_wnd, GLFW_KEY_B) == GLFW_PRESS ? -1 : 0;
+	m_camera4d.setTheta(
+		m_camera4d.getTheta1() + unit4d * theta1 * (float)m_deltaTime,
+		m_camera4d.getTheta2() + unit4d * theta2 * (float)m_deltaTime,
+		m_camera4d.getTheta3() + unit4d * theta3 * (float)m_deltaTime);
+
+
+	const float unitrot = glm::radians(90.0f);
+	int rot[6] = { 0, 0, 0, 0, 0, 0 };
+	rot[0] += glfwGetKey(m_wnd, GLFW_KEY_Y) == GLFW_PRESS ? 1 : 0;
+	rot[0] += glfwGetKey(m_wnd, GLFW_KEY_U) == GLFW_PRESS ? -1 : 0;
+	rot[1] += glfwGetKey(m_wnd, GLFW_KEY_H) == GLFW_PRESS ? 1 : 0;
+	rot[1] += glfwGetKey(m_wnd, GLFW_KEY_J) == GLFW_PRESS ? -1 : 0;
+	rot[2] += glfwGetKey(m_wnd, GLFW_KEY_N) == GLFW_PRESS ? 1 : 0;
+	rot[2] += glfwGetKey(m_wnd, GLFW_KEY_M) == GLFW_PRESS ? -1 : 0;
+	rot[3] += glfwGetKey(m_wnd, GLFW_KEY_I) == GLFW_PRESS ? 1 : 0;
+	rot[3] += glfwGetKey(m_wnd, GLFW_KEY_O) == GLFW_PRESS ? -1 : 0;
+	rot[4] += glfwGetKey(m_wnd, GLFW_KEY_K) == GLFW_PRESS ? 1 : 0;
+	rot[4] += glfwGetKey(m_wnd, GLFW_KEY_L) == GLFW_PRESS ? -1 : 0;
+	rot[5] += glfwGetKey(m_wnd, GLFW_KEY_COMMA) == GLFW_PRESS ? 1 : 0;
+	rot[5] += glfwGetKey(m_wnd, GLFW_KEY_PERIOD) == GLFW_PRESS ? -1 : 0;
+	for (int i = 0; i < 6; ++i)
+	{
+		static_cast<MainScene *>(m_pScene.get())->getRotate()[i]
+			= unitrot * rot[i] * (float)m_deltaTime;
+	}
 }
 
 void MainWnd::onKeyInput(int key, int scancode, int action, int mods)
@@ -261,9 +282,15 @@ void MainWnd::onKeyInput(int key, int scancode, int action, int mods)
 	{
 		std::cout <<
 			"W/A/S/D/mouse : move 3d-space camera\n"
-			"Y/U : rotate 4d-space camera (axis 1)\n"
-			"H/J : rotate 4d-space camera (axis 2)\n"
-			"N/M : rotate 4d-space camera (axis 3)\n"
+			"R/T : rotate 4d-space camera (theta1)\n"
+			"F/G : rotate 4d-space camera (theta2)\n"
+			"V/B : rotate 4d-space camera (theta3)\n"
+			"Y/U : rotate object (XY)\n"
+			"H/J : rotate object (YZ)\n"
+			"N/M : rotate object (ZX)\n"
+			"I/O : rotate object (XW)\n"
+			"K/L : rotate object (YW)\n"
+			",/. : rotate object (ZW)\n"
 			"1 : turn on/off wireframe\n"
 			"Q: quit\n"
 			"F1 : show this message"

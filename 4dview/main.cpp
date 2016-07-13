@@ -58,7 +58,7 @@ int main()
 			{
 				if (pWnd->initialize())
 				{
-					pWnd->loop();
+					pWnd->loopManualFPS();
 					pWnd.reset();
 					ret = 0;
 				}

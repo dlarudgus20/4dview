@@ -37,11 +37,9 @@
 class Camera4d
 {
 private:
-	glm::vec4 m_position;
-	float m_distance;
-
-	float m_pitch, m_roll, m_yaw;
-	glm::vec4 m_front, m_right, m_up, m_over;
+	float m_theta1 = 0;
+	float m_theta2 = 0;
+	float m_theta3 = 0;
 
 	math4d::mat5 m_matrix = math4d::identity();
 	math4d::mat5 m_projection = math4d::identity();
@@ -53,12 +51,10 @@ public:
 	const math4d::mat5 &getMatrix() const;
 	const math4d::mat5 &getProjection() const;
 
-	float getPitch() const;
-	float getRoll() const;
-	float getYaw() const;
-	void setPitchRollYaw(float pitch, float roll, float yaw);
-
-	void move(int front, int right, int over, float unit);
+	float getTheta1() const;
+	float getTheta2() const;
+	float getTheta3() const;
+	void setTheta(float theta1, float theta2, float theta3);
 
 	void calcProjection();
 

@@ -225,6 +225,25 @@ namespace math4d
 		rs.v[4] = m.m[20 + 0] * v.v[0] + m.m[20 + 1] * v.v[1] + m.m[20 + 2] * v.v[2] + m.m[20 + 3] * v.v[3] + m.m[20 + 4] * v.v[4];
 		return rs;
 	}
+
+	inline mat5 mul5(const mat5 &m1, const mat5 &m2)
+	{
+		mat5 rs;
+		for (int i = 0; i < 25; ++i)
+		{
+			rs.m[i] = 0;
+			for (int j = 0; j < 5; ++j)
+			{
+				for (int k = 0; k < 5; ++k)
+				{
+					int a = i / 5;
+					int b = i % 5;
+					rs.m[i] += m1.m[a * 5 + j] * m2.m[k * 5 + b];
+				}
+			}
+		}
+		return rs;
+	}
 }
 
 #endif /* VEC5_H_ */

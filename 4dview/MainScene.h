@@ -43,9 +43,14 @@ private:
 
 	bool m_bWireframe = false;
 
+	std::array<float, 6> m_rotate = { 0, 0, 0, 0, 0, 0 };
+
 public:
 	MainScene();
 	virtual ~MainScene();
+
+	const std::array<float, 6> &getRotate() const { return m_rotate; }
+	std::array<float, 6> &getRotate() { return m_rotate; }
 
 	virtual bool getIsWireframe() const override;
 	virtual void setIsWireframe(bool wire) override;

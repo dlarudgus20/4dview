@@ -33,8 +33,6 @@
 #include "Camera4d.h"
 
 Camera4d::Camera4d()
-	: m_position(0, 0, 3, 0), m_distance(3)
-	, m_pitch(0.0f), m_roll(0.0f), m_yaw(0.0f)
 {
 	calculate();
 }
@@ -54,41 +52,27 @@ const math4d::mat5 & Camera4d::getProjection() const
 	return m_projection;
 }
 
-float Camera4d::getPitch() const
+float Camera4d::getTheta1() const
 {
-	return m_pitch;
+	return m_theta1;
 }
 
-float Camera4d::getRoll() const
+float Camera4d::getTheta2() const
 {
-	return m_roll;
+	return m_theta2;
 }
 
-float Camera4d::getYaw() const
+float Camera4d::getTheta3() const
 {
-	return m_yaw;
+	return m_theta3;
 }
 
-void Camera4d::setPitchRollYaw(float pitch, float roll, float yaw)
+void Camera4d::setTheta(float theta1, float theta2, float theta3)
 {
-	m_pitch = pitch;
-	m_roll = roll;
-	m_yaw = yaw;
+	m_theta1 = theta1;
+	m_theta2 = theta2;
+	m_theta3 = theta3;
 
-	// std::abs(pitch) must not be bigger than 90
-	if (pitch > 89.99f)
-		pitch = 89.99f;
-	else if (pitch < -89.99f)
-		pitch = -89.99f;
-
-	calculate();
-}
-
-void Camera4d::move(int front, int right, int over, float unit)
-{
-	m_position += front * unit * m_front;
-	m_position += right * unit * m_right;
-	m_position += over * unit * m_over;
 	calculate();
 }
 
@@ -114,34 +98,36 @@ void Camera4d::calcProjection()
 
 void Camera4d::calculate()
 {
-	float sin_pitch = std::sin(m_pitch);
-	float cos_pitch = std::cos(m_pitch);
-	float sin_yaw = std::sin(m_yaw);
-	float cos_yaw = std::cos(m_yaw);
-	float sin_roll = std::sin(m_roll - glm::pi<float>() / 2);
-	float cos_roll = std::cos(m_roll - glm::pi<float>() / 2);
+	const float distance = 3.0f;
 
-	m_front = glm::vec4(
-		cos_roll * cos_pitch * cos_yaw,
-		cos_roll * sin_pitch,
-		cos_roll * cos_pitch * sin_yaw,
-		sin_roll
+	float sin1 = std::sin(m_theta1);
+	float cos1 = std::cos(m_theta1);
+	float sin2 = std::sin(m_theta2);
+	float cos2 = std::cos(m_theta2);
+	float sin3 = std::sin(m_theta3);
+	float cos3 = std::cos(m_theta3);
+
+	glm::vec4 front = glm::vec4(
+		-sin1 * sin2 * sin3,
+		-sin1 * sin2 * cos3,
+		-sin1 * cos2,
+		-cos1
 	);
 
-	m_right = glm::normalize(math4d::cross4(
-		m_front, glm::vec4(0, 1, 0, 0), glm::vec4(0, 0, 1, 0)));
-	m_up = glm::normalize(math4d::cross4(
-		glm::vec4(0, 0, 1, 0), m_right, m_front));
-	m_over = math4d::cross4(
-		m_right, m_front, m_up);
+	glm::vec4 right = glm::normalize(math4d::cross4(
+		front, glm::vec4(0, 1, 0, 0), glm::vec4(0, 0, 1, 0)));
+	glm::vec4 up = glm::normalize(math4d::cross4(
+		glm::vec4(0, 0, 1, 0), right, front));
+	glm::vec4 over = math4d::cross4(
+		right, front, up);
 
-	glm::vec4 pos = -m_distance * m_front;
+	glm::vec4 pos = -distance * front;
 
 	m_matrix = math4d::mat5 {
-		-m_right.x, m_up.x, m_over.x, m_front.x, pos.x,
-		-m_right.y, m_up.y, m_over.y, m_front.y, pos.y,
-		-m_right.z, m_up.z, m_over.z, m_front.z, pos.z,
-		-m_right.w, m_up.w, m_over.w, m_front.w, pos.w,
+		-right.x, up.x, over.x, front.x, pos.x,
+		-right.y, up.y, over.y, front.y, pos.y,
+		-right.z, up.z, over.z, front.z, pos.z,
+		-right.w, up.w, over.w, front.w, pos.w,
 		0, 0, 0, 0, 1,
 	};
 }
