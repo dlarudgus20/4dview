@@ -98,7 +98,7 @@ void Camera4d::calcProjection()
 
 void Camera4d::calculate()
 {
-	const float distance = 3.0f;
+	const float distance = 5.0f;
 
 	float sin1 = std::sin(m_theta1);
 	float cos1 = std::cos(m_theta1);
@@ -108,10 +108,10 @@ void Camera4d::calculate()
 	float cos3 = std::cos(m_theta3);
 
 	glm::vec4 front = glm::vec4(
-		-sin1 * sin2 * sin3,
-		-sin1 * sin2 * cos3,
-		-sin1 * cos2,
-		-cos1
+		-cos1 * cos2 * cos3,
+		-cos1 * cos2 * sin3,
+		-cos1 * sin2,
+		-sin1
 	);
 
 	glm::vec4 right = glm::normalize(math4d::cross4(
@@ -121,13 +121,21 @@ void Camera4d::calculate()
 	glm::vec4 over = math4d::cross4(
 		right, front, up);
 
-	glm::vec4 pos = -distance * front;
+	glm::vec4 direction = distance * front;
 
-	m_matrix = math4d::mat5 {
-		-right.x, up.x, over.x, front.x, pos.x,
-		-right.y, up.y, over.y, front.y, pos.y,
-		-right.z, up.z, over.z, front.z, pos.z,
-		-right.w, up.w, over.w, front.w, pos.w,
+	math4d::mat5 mov = math4d::mat5 {
+		1, 0, 0, 0, direction.x,
+		0, 1, 0, 0, direction.y,
+		0, 0, 1, 0, direction.z,
+		0, 0, 0, 1, direction.w,
 		0, 0, 0, 0, 1,
 	};
+	math4d::mat5 proj = math4d::mat5 {
+		-right.x, up.x, over.x, front.x, 0,
+		-right.y, up.y, over.y, front.y, 0,
+		-right.z, up.z, over.z, front.z, 0,
+		-right.w, up.w, over.w, front.w, 0,
+		0, 0, 0, 0, 1,
+	};
+	m_matrix = math4d::mul5(proj, mov);
 }

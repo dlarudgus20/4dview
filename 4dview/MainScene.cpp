@@ -74,12 +74,12 @@ void MainScene::render(const glm::mat4 &viewMatrix3, const math4d::mat5 &viewMat
 
 	{
 		math4d::mat5 prevMat = vmMatrix4;
-		/*vmMatrix4 = math4d::mul5(vmMatrix4, math4d::rotate_xy(m_rotate[0]));
+		vmMatrix4 = math4d::mul5(vmMatrix4, math4d::rotate_xy(m_rotate[0]));
 		vmMatrix4 = math4d::mul5(vmMatrix4, math4d::rotate_yz(m_rotate[1]));
 		vmMatrix4 = math4d::mul5(vmMatrix4, math4d::rotate_zx(m_rotate[2]));
 		vmMatrix4 = math4d::mul5(vmMatrix4, math4d::rotate_xw(m_rotate[3]));
 		vmMatrix4 = math4d::mul5(vmMatrix4, math4d::rotate_yw(m_rotate[4]));
-		vmMatrix4 = math4d::mul5(vmMatrix4, math4d::rotate_zw(m_rotate[5]));*/
+		vmMatrix4 = math4d::mul5(vmMatrix4, math4d::rotate_zw(m_rotate[5]));
 		pShader->setUniformMatrix4f("vmMatrix3d", vmMatrix3);
 		pShader->setUniform1fv("vmMatrix4d.m", 25, vmMatrix4.m);
 		m_container.draw();

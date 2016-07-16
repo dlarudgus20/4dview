@@ -264,7 +264,7 @@ void MainWnd::idle()
 	for (int i = 0; i < 6; ++i)
 	{
 		static_cast<MainScene *>(m_pScene.get())->getRotate()[i]
-			= unitrot * rot[i] * (float)m_deltaTime;
+			+= unitrot * rot[i] * (float)m_deltaTime;
 	}
 }
 

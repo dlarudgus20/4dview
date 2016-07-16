@@ -234,12 +234,9 @@ namespace math4d
 			rs.m[i] = 0;
 			for (int j = 0; j < 5; ++j)
 			{
-				for (int k = 0; k < 5; ++k)
-				{
-					int a = i / 5;
-					int b = i % 5;
-					rs.m[i] += m1.m[a * 5 + j] * m2.m[k * 5 + b];
-				}
+				int a = i / 5;
+				int b = i % 5;
+				rs.m[i] += m1.m[a * 5 + j] * m2.m[j * 5 + b];
 			}
 		}
 		return rs;
