@@ -110,6 +110,8 @@ void MainWnd::loop()
 			std::cout << timeStr(frameTime) << " fps: " << m_fps << std::endl;
 		}
 	}
+
+	glfwDestroyWindow(m_wnd);
 }
 
 void MainWnd::loopManualFPS()
@@ -157,6 +159,16 @@ void MainWnd::loopManualFPS()
 			remain -= m_deltaTime;
 		}
 	}
+
+	glfwDestroyWindow(m_wnd);
+}
+
+bool MainWnd::tryClose()
+{
+	glfwSetWindowShouldClose(m_wnd, 1);
+	onWindowClose();
+
+	return (glfwWindowShouldClose(m_wnd) == 1);
 }
 
 void MainWnd::initCallback()
@@ -276,7 +288,7 @@ void MainWnd::onKeyInput(int key, int scancode, int action, int mods)
 	}
 	else if (key == GLFW_KEY_Q && action == GLFW_PRESS)
 	{
-		glfwDestroyWindow(m_wnd);
+		tryClose();
 	}
 	else if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
 	{

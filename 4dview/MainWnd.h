@@ -69,6 +69,8 @@ public:
 	void loop();
 	void loopManualFPS();
 
+	bool tryClose();
+
 private:
 	void initCallback();
 	void render();
