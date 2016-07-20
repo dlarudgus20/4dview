@@ -59,7 +59,9 @@ bool MainWnd::create()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-	m_wnd = glfwCreateWindow(MAINWND_WIDTH, MAINWND_HEIGHT, "pfps (press F1 to print help on console)", nullptr, nullptr);
+	m_wnd = glfwCreateWindow(MAINWND_WIDTH, MAINWND_HEIGHT,
+		"pfps (press F1 to print help) https://github.com/dlarudgus20/4dview",
+		nullptr, nullptr);
 	if (m_wnd != nullptr)
 	{
 		glfwMakeContextCurrent(m_wnd);
@@ -293,6 +295,7 @@ void MainWnd::onKeyInput(int key, int scancode, int action, int mods)
 	else if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
 	{
 		std::cout <<
+			"git repo : https://github.com/dlarudgus20/4dview\n"
 			"W/A/S/D/mouse : move 3d-space camera\n"
 			"R/T : rotate 4d-space camera (theta1)\n"
 			"F/G : rotate 4d-space camera (theta2)\n"
