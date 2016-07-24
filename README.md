@@ -3,6 +3,8 @@
 
 다음 논문을 참고하였습니다 : http://steve.hollasch.net/thesis/
 
+다운로드 링크 : https://github.com/dlarudgus20/4dview/releases
+
 # 라이선스
 [BSD-2-Clause](http://choosealicense.com/licenses/bsd-2-clause/)입니다. LICENSE 파일을 참조하십시오.
 
